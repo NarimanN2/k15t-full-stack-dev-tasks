@@ -1,27 +1,112 @@
-<html>
-    <head>
-        <title>PAT Registration</title>
-        <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="public/css/app.css">
-    </head>
-    <body>
-        #parse ("common/header.vm")
-        <div class="bannerText">
-            <h1>
-                <span>Java Meetup Registration</span>
-            </h1>
-        </div>
-        <form>
-            Extend the form and bind the "Submit" button to store the entered information using the REST resource RegistrationResource.
-            The form should support to enter the following information:<br>
-            - Name (required)<br>
-            - Password (required)<br>
-            - Address (required)<br>
-            - Email (required)<br>
-            - Phone number
-            <p><input class="btn btn-default" type="submit" value="Submit"></p>
-        </form>
-        #parse ("common/footer.vm")
-    </body>
+<head>
+    <title>PAT Registration</title>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"
+            integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="public/css/app.css">
+</head>
+<body>
+    #parse ("common/header.vm")
+<div class="bannerText">
+    <h1>
+        <span>Java Meetup Registration</span>
+    </h1>
+</div>
+<form id="form">
+    <table>
+        <tr>
+            <td>
+                Name:
+            </td>
+            <td>
+                <input type="text" name="name" id="name" pattern="[A-Za-z ]*" required>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Password:
+            </td>
+            <td>
+                <input type="password" name="password" id="password" required>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Address:
+            </td>
+            <td>
+                <input type="text" name="address" id="address" required>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Email:
+            </td>
+            <td>
+                <input type="email" name="email" id="email" required>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Phone number:
+            </td>
+            <td>
+                <input type="tel" pattern="^\+[1-9]{1}[0-9]{3,14}$" name="phoneNumber" id="phoneNumber">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="button" class="btn btn-default" type="submit" value="Submit">
+            <td>
+            <td>
+
+            </td>
+        </tr>
+    </table>
+</form>
+<div id="success" class="alert alert-success" role="alert" style="display: none">
+    You have successfully registered.
+</div>
+<div id="error" class="alert alert-danger" role="alert" style="display: none">
+    An Error occurred.
+</div>
+    #parse ("common/footer.vm")
+</body>
+<script>
+    $(document).ready(function () {
+        $('#form').on('submit', function (event) {
+
+            event.preventDefault();
+
+            $('#success').hide();
+            $('#error').hide();
+
+            var formData = {};
+
+            $.each($('#form').serializeArray(), function () {
+                formData[this.name] = this.value;
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/attendees",
+                data: JSON.stringify(formData),
+                success: function () {
+                    $('#success').show()
+                },
+                error: function (xhr) {
+                    $('#error').text('');
+                    var error = JSON.parse(xhr.responseText)
+                    var messages = '';
+                    error['messages'].forEach(message => $('#error').append(message + '<br>'));
+
+                    $('#error').show()
+                },
+                dataType: "json",
+                contentType: "application/json"
+            });
+        })
+    })
+</script>
 </html>

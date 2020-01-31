@@ -13,8 +13,8 @@ import java.io.StringWriter;
 @RestController
 public class RegistrationController {
 
-    @Autowired private VelocityEngine velocityEngine;
-
+    @Autowired
+    private VelocityEngine velocityEngine;
 
     @RequestMapping("/registration.html")
     public String registration() {
