@@ -6,6 +6,18 @@ This is a small web application allowing you to register for the next Java Meetu
 
 Data transfer objects(DTO) are used to transfer information between client and server, The service layer contains business logic and the repository layer is in charge of working with the database, which in this case is an in-memory relational database called H2. I used Spring Core for dependency injection, Spring Security for password hashing and Spring Data JPA to access the database. 
 
+## Build and Run
+This project uses Maven as its build tool. To build this project, run this maven command:
+
+```
+mvn clean package
+```
+
+The Maven build creates an executable jar. You can start the application with:
+
+```
+java -jar k15t-full-stack-dev-tasks-0.1.0.jar
+```
 
 ## Validation
 Validations are done both in frontend and backend, and some of them are as follows:
